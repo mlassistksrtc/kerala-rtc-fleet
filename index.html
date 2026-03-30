@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kerala RTC Fleet Management System</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="./css/buslist.css">
+    <link rel="stylesheet" href="./css/transfer.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Path Handler -->
+    <script src="./js/path.js"></script>
+    
+    <!-- Authentication Check -->
+    <script>
+        // Check if user is logged in - redirect to login if not
+        (function() {
+            if (!localStorage.getItem("rtcCurrentUser")) {
+                console.log("No user session found, redirecting to login...");
+                const loginUrl = window.basePath + 'login.html';
+                window.location.href = loginUrl;
+            } else {
+                console.log("User session found:", JSON.parse(localStorage.getItem("rtcCurrentUser")).username);
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">
+                <h1><i class="fas fa-bus"></i> Kerala RTC Fleet Intelligence</h1>
+                <p>KSRTC • Complete Fleet Analytics & Management System</p>
+            </div>
+            <div class="user-area" id="userArea">
+                <span class="login-status" id="loginStatusSpan">
+                    <i class="fas fa-user-circle"></i> Not logged in
+                </span>
+                <button class="btn btn-outline" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation" id="tabNavigation">
+            <button class="tab-btn active" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+            <button class="tab-btn" data-tab="buslist">
+                <i class="fas fa-table-list"></i> Full Bus List
+            </button>
+            <button class="tab-btn" data-tab="transfer" id="transferTabBtn">
+                <i class="fas fa-exchange-alt"></i> Bus Transfer & Addition
+            </button>
+            <button class="tab-btn" data-tab="usermanager" id="userManagerTabBtn">
+                <i class="fas fa-users-cog"></i> User Management
+            </button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboardTab" class="tab-content active">
+            <!-- Admin Panel -->
+            <div id="adminZone" class="admin-panel" style="display: none;">
+                <div class="section-title">
+                    <i class="fas fa-database"></i> Admin Console – Fleet Database Management
+                </div>
+                <p>Upload Excel (.xlsx, .xls) with columns: 
+                    <strong>BUSNO, REGNO, Date_of_Reg, MAKE & TYPE, CLASS, CLASS - DETAIL, ALLOTTED DEPOT, WORKSHOP, DISTRICT, ENGINE NUMBER, CHASSIS NUMBER</strong>
+                </p>
+                <div class="flex-group">
+                    <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv">
+                    <button class="btn btn-primary" id="uploadBtn">
+                        <i class="fas fa-upload"></i> Upload & Replace Database
+                    </button>
+                    <button class="btn btn-outline" id="clearDataBtn">
+                        <i class="fas fa-trash-alt"></i> Clear Fleet Data
+                    </button>
+                    <button class="btn btn-outline" id="exportBtn">
+                        <i class="fas fa-download"></i> Export to Excel
+                    </button>
+                </div>
+                <div id="uploadMsg" class="upload-message"></div>
+            </div>
+
+            <!-- KPI Grid -->
+            <div class="kpi-section">
+                <h2 class="section-subtitle"><i class="fas fa-chart-line"></i> Key Performance Indicators</h2>
+                <div class="kpi-grid">
+                    <div class="kpi-card" data-kpi="totalFleet">
+                        <h3>Total Fleet</h3>
+                        <div class="kpi-value" id="totalFleet">0</div>
+                        <div class="kpi-sub">active buses</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="makeType">
+                        <h3>Make & Type <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="makeTypeCount">0</div>
+                        <div class="kpi-sub">different types</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="busClass">
+                        <h3>Bus Classes <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="classCount">0</div>
+                        <div class="kpi-sub">service categories</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="classDetail">
+                        <h3>Class Detail <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="classDetailCount">0</div>
+                        <div class="kpi-sub">detailed classifications</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="district">
+                        <h3>Districts <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="districtCount">0</div>
+                        <div class="kpi-sub">operational areas</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="swiftBuses">
+                        <h3>Swift Buses <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="swiftCount">0</div>
+                        <div class="kpi-sub">Swift series fleet</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="electricBuses">
+                        <h3>Electric Buses <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="electricCount">0</div>
+                        <div class="kpi-sub">EV fleet</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="depots">
+                        <h3>Depots <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="depotCount">0</div>
+                        <div class="kpi-sub">operational bases</div>
+                    </div>
+                    <div class="kpi-card clickable" data-kpi="workshops">
+                        <h3>Workshops <i class="fas fa-info-circle info-icon"></i></h3>
+                        <div class="kpi-value" id="workshopCount">0</div>
+                        <div class="kpi-sub">maintenance centers</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Age Distribution Section -->
+            <div class="kpi-section">
+                <h2 class="section-subtitle clickable-age" id="ageSectionTitle">
+                    <i class="fas fa-calendar-alt"></i> Age Distribution (Years) 
+                    <i class="fas fa-info-circle info-icon"></i>
+                </h2>
+                <div class="age-grid" id="ageGrid"></div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <div class="section-title"><i class="fas fa-chart-pie"></i> Make & Type Distribution</div>
+                        <canvas id="makeTypeChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="section-title"><i class="fas fa-chart-pie"></i> Bus Class Distribution</div>
+                        <canvas id="classChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-card">
+                        <div class="section-title"><i class="fas fa-chart-bar"></i> Depot-wise Fleet Distribution</div>
+                        <canvas id="depotChart" width="800" height="400"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="section-title"><i class="fas fa-chart-bar"></i> Workshop-wise Fleet Distribution</div>
+                        <canvas id="workshopChart" width="800" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Bus List Tab -->
+        <div id="buslistTab" class="tab-content">
+            <div class="buslist-container">
+                <!-- Filter Panel -->
+                <div class="filter-panel">
+                    <div class="filter-header">
+                        <h3><i class="fas fa-filter"></i> Filters & Search</h3>
+                        <button class="btn btn-outline" id="clearAllFiltersBtn">
+                            <i class="fas fa-eraser"></i> Clear All Filters
+                        </button>
+                    </div>
+                    
+                    <button class="filter-toggle" id="filterToggle">
+                        <span><i class="fas fa-sliders-h"></i> Show/Hide Filters</span>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </button>
+                    
+                    <div class="filter-content" id="filterContent">
+                        <div class="search-section">
+                            <div class="search-wrapper">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="universalSearch" placeholder="Search by Bus No, Reg No, Date, Age, Make, Class, Depot, Workshop, Engine No, Chassis No, Class Detail, District...">
+                            </div>
+                        </div>
+                        
+                        <div class="filters-grid">
+                            <div class="filter-group">
+                                <label><i class="fas fa-industry"></i> Make & Type</label>
+                                <div class="multi-select-container" id="multi-select-makeType">
+                                    <button class="multi-select-btn" id="btn-makeType">
+                                        <span class="btn-text">Select</span>
+                                        <span class="selected-count"></span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="multi-select-dropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="tags-makeType"></div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label><i class="fas fa-tag"></i> Class</label>
+                                <div class="multi-select-container" id="multi-select-busClass">
+                                    <button class="multi-select-btn" id="btn-busClass">
+                                        <span class="btn-text">Select</span>
+                                        <span class="selected-count"></span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="multi-select-dropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="tags-busClass"></div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label><i class="fas fa-info-circle"></i> Class Detail</label>
+                                <div class="multi-select-container" id="multi-select-classDetail">
+                                    <button class="multi-select-btn" id="btn-classDetail">
+                                        <span class="btn-text">Select</span>
+                                        <span class="selected-count"></span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="multi-select-dropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="tags-classDetail"></div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label><i class="fas fa-map-marker-alt"></i> Depot</label>
+                                <div class="multi-select-container" id="multi-select-depot">
+                                    <button class="multi-select-btn" id="btn-depot">
+                                        <span class="btn-text">Select</span>
+                                        <span class="selected-count"></span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="multi-select-dropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="tags-depot"></div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label><i class="fas fa-tools"></i> Workshop</label>
+                                <div class="multi-select-container" id="multi-select-workshop">
+                                    <button class="multi-select-btn" id="btn-workshop">
+                                        <span class="btn-text">Select</span>
+                                        <span class="selected-count"></span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="multi-select-dropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="tags-workshop"></div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label><i class="fas fa-map-pin"></i> District</label>
+                                <div class="multi-select-container" id="multi-select-district">
+                                    <button class="multi-select-btn" id="btn-district">
+                                        <span class="btn-text">Select</span>
+                                        <span class="selected-count"></span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="multi-select-dropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="tags-district"></div>
+                            </div>
+                            
+                            <div class="filter-group age-range-group">
+                                <label><i class="fas fa-calendar-week"></i> Age Range (Years)</label>
+                                <div class="age-inputs">
+                                    <input type="number" id="ageFrom" placeholder="From" step="0.1" min="0" class="age-input">
+                                    <span>to</span>
+                                    <input type="number" id="ageTo" placeholder="To" step="0.1" min="0" class="age-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-stats">
+                        <span id="filteredCount">0</span> buses found
+                        <button class="btn btn-sm btn-outline" id="exportFilteredBtn">
+                            <i class="fas fa-download"></i> Export Filtered Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-card buslist-table">
+                    <div class="section-title"><i class="fas fa-bus"></i> Complete Bus Fleet</div>
+                    <div class="table-wrapper">
+                        <table id="fullBusTable">
+                            <thead id="fullBusTableHead">
+                                <tr>
+                                    <th data-sort="slno">Sl. No <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="busNo">Bus No <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="regNo">Reg No <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="regDate">Registration Date <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="age">Age (Yrs) <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="makeType">Make & Type <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="busClass">Class <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="depot">Depot <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="workshop">Workshop <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="classDetail">Class Detail <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="district">District <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="engineNo">Engine No <i class="fas fa-sort sort-icon"></i></th>
+                                    <th data-sort="chassisNo">Chassis No <i class="fas fa-sort sort-icon"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="fullBusTableBody">
+                                <tr><td colspan="13">Loading bus data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination-container">
+                        <div class="pagination-info">
+                            Showing <span id="pageStart">0</span> to <span id="pageEnd">0</span> of <span id="totalFilteredCount">0</span> buses
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="btn btn-sm btn-outline" id="prevPageBtn" disabled>
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <span id="pageInfo" class="page-info">Page 1 of 1</span>
+                            <button class="btn btn-sm btn-outline" id="nextPageBtn" disabled>
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bus Transfer & Addition Tab -->
+        <div id="transferTab" class="tab-content">
+            <div class="transfer-container">
+                <!-- Bus Transfer Section -->
+                <div class="transfer-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-exchange-alt"></i> Bus Transfer</h2>
+                        <p class="section-note" id="transferPermissionNote"><i class="fas fa-lock"></i> Admin & Supervisor can perform transfers</p>
+                    </div>
+                    
+                    <div class="search-bus-section">
+                        <label><i class="fas fa-search"></i> Search Bus Number</label>
+                        <div class="bus-search-wrapper">
+                            <input type="text" id="busSearchInput" placeholder="Type bus number to search..." autocomplete="off">
+                            <div id="busSearchResults" class="search-results-dropdown"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="selectedBusDetails" class="bus-details-card" style="display: none;">
+                        <h3><i class="fas fa-bus"></i> Selected Bus Details</h3>
+                        <div class="details-grid">
+                            <div class="detail-item"><span class="detail-label">Bus No:</span><span id="detailBusNo" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Reg No:</span><span id="detailRegNo" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Registration Date:</span><span id="detailRegDate" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Age:</span><span id="detailAge" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Make & Type:</span><span id="detailMakeType" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Class:</span><span id="detailClass" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Class Detail:</span><span id="detailClassDetail" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Current Depot:</span><span id="detailCurrentDepot" class="detail-value highlight">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Current Workshop:</span><span id="detailCurrentWorkshop" class="detail-value highlight">-</span></div>
+                            <div class="detail-item"><span class="detail-label">District:</span><span id="detailDistrict" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Engine No:</span><span id="detailEngineNo" class="detail-value">-</span></div>
+                            <div class="detail-item"><span class="detail-label">Chassis No:</span><span id="detailChassisNo" class="detail-value">-</span></div>
+                        </div>
+                    </div>
+                    
+                    <div id="transferOptions" class="transfer-options" style="display: none;">
+                        <h3><i class="fas fa-arrow-right"></i> Transfer Options</h3>
+                        <div class="transfer-grid">
+                            <div class="transfer-field">
+                                <label><i class="fas fa-map-marker-alt"></i> Transfer Depot</label>
+                                <select id="transferDepot" class="form-control">
+                                    <option value="">Select Depot</option>
+                                </select>
+                            </div>
+                            <div class="transfer-field">
+                                <label><i class="fas fa-tools"></i> Transfer Workshop</label>
+                                <select id="transferWorkshop" class="form-control">
+                                    <option value="">Select Workshop</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="transfer-actions">
+                            <button class="btn btn-primary" id="confirmTransferBtn" disabled>
+                                <i class="fas fa-check-circle"></i> Confirm Transfer
+                            </button>
+                            <button class="btn btn-outline" id="cancelTransferBtn">
+                                <i class="fas fa-times-circle"></i> Cancel Transfer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Edit Bus Section -->
+                <div class="edit-bus-section" id="editBusSection">
+                    <div class="section-header">
+                        <h2><i class="fas fa-edit"></i> Edit Bus Details</h2>
+                        <p class="section-note" id="editPermissionNote"><i class="fas fa-lock"></i> Admin & Supervisor can edit bus details</p>
+                    </div>
+                    
+                    <div class="search-bus-section">
+                        <label><i class="fas fa-search"></i> Search Bus Number to Edit</label>
+                        <div class="bus-search-wrapper">
+                            <input type="text" id="editBusSearchInput" placeholder="Type bus number to search..." autocomplete="off">
+                            <div id="editBusSearchResults" class="search-results-dropdown"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="editBusFormContainer" class="edit-bus-form-container" style="display: none;">
+                        <div class="edit-bus-form">
+                            <h3><i class="fas fa-edit"></i> Edit Bus Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label><i class="fas fa-bus"></i> Bus Number *</label>
+                                    <input type="text" id="editBusNo" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card"></i> Registration Number *</label>
+                                    <input type="text" id="editRegNo" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt"></i> Registration Date *</label>
+                                    <input type="date" id="editRegDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-industry"></i> Make & Type *</label>
+                                    <select id="editMakeType" class="form-control" required>
+                                        <option value="">Select Make & Type</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-tag"></i> Class *</label>
+                                    <select id="editClass" class="form-control" required>
+                                        <option value="">Select Class</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-info-circle"></i> Class Detail</label>
+                                    <select id="editClassDetail" class="form-control">
+                                        <option value="">Select Class Detail</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt"></i> Depot *</label>
+                                    <select id="editDepot" class="form-control" required>
+                                        <option value="">Select Depot</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-tools"></i> Workshop</label>
+                                    <select id="editWorkshop" class="form-control">
+                                        <option value="">Select Workshop</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-pin"></i> District</label>
+                                    <input type="text" id="editDistrict" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-microchip"></i> Engine Number</label>
+                                    <input type="text" id="editEngineNo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-cogs"></i> Chassis Number</label>
+                                    <input type="text" id="editChassisNo" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-primary" id="saveEditBtn">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                                <button type="button" class="btn btn-outline" id="cancelEditBtn">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                            <div id="editBusMessage" class="form-message"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add New Bus Section -->
+                <div class="add-bus-section" id="addBusSection">
+                    <div class="section-header">
+                        <h2><i class="fas fa-plus-circle"></i> Add New Bus</h2>
+                        <p class="section-note" id="addPermissionNote"><i class="fas fa-lock"></i> Admin & Supervisor can add new buses</p>
+                    </div>
+                    
+                    <form id="addBusForm" class="add-bus-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label><i class="fas fa-bus"></i> Bus Number *</label>
+                                <input type="text" id="newBusNo" class="form-control" required placeholder="e.g., AT999">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-id-card"></i> Registration Number *</label>
+                                <input type="text" id="newRegNo" class="form-control" required placeholder="e.g., KL01A9999">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar-alt"></i> Registration Date *</label>
+                                <input type="date" id="newRegDate" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-industry"></i> Make & Type *</label>
+                                <select id="newMakeType" class="form-control" required>
+                                    <option value="">Select Make & Type</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> Class *</label>
+                                <select id="newClass" class="form-control" required>
+                                    <option value="">Select Class</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-info-circle"></i> Class Detail</label>
+                                <select id="newClassDetail" class="form-control">
+                                    <option value="">Select Class Detail</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-map-marker-alt"></i> Depot *</label>
+                                <select id="newDepot" class="form-control" required>
+                                    <option value="">Select Depot</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-tools"></i> Workshop</label>
+                                <select id="newWorkshop" class="form-control">
+                                    <option value="">Select Workshop</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-map-pin"></i> District</label>
+                                <input type="text" id="newDistrict" class="form-control" placeholder="Auto-filled based on depot">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-microchip"></i> Engine Number</label>
+                                <input type="text" id="newEngineNo" class="form-control" placeholder="Engine number">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-cogs"></i> Chassis Number</label>
+                                <input type="text" id="newChassisNo" class="form-control" placeholder="Chassis number">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" id="addBusBtn">
+                                <i class="fas fa-plus-circle"></i> Add New Bus
+                            </button>
+                            <button type="button" class="btn btn-outline" id="resetFormBtn">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        </div>
+                        <div id="addBusMessage" class="form-message"></div>
+                    </form>
+                </div>
+                
+                <!-- Transfer History Section -->
+                <div class="transfer-history-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-history"></i> Transfer History</h2>
+                        <button class="btn btn-sm btn-outline" id="clearHistoryBtn" style="display: none;">
+                            <i class="fas fa-trash-alt"></i> Clear History
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="transferHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Bus No</th>
+                                    <th>From Depot</th>
+                                    <th>To Depot</th>
+                                    <th>From Workshop</th>
+                                    <th>To Workshop</th>
+                                    <th>Transferred By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transferHistoryBody">
+                                <tr><td colspan="7">No transfer history available</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Tab -->
+        <div id="usermanagerTab" class="tab-content">
+            <div class="user-management-container">
+                <div class="user-header">
+                    <h2><i class="fas fa-users-cog"></i> User Management</h2>
+                    <div class="user-header-actions">
+                        <button class="btn btn-primary" id="addUserBtn">
+                            <i class="fas fa-user-plus"></i> Add New User
+                        </button>
+                        <button class="btn btn-outline" id="changeOwnPasswordBtn">
+                            <i class="fas fa-key"></i> Change My Password
+                        </button>
+                        <button class="btn btn-outline" id="viewActivityLogBtn">
+                            <i class="fas fa-history"></i> Activity Log
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="user-search-section">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="userSearchInput" placeholder="Search by username, name, role, or email...">
+                    </div>
+                </div>
+                
+                <div class="table-card">
+                    <div class="section-title"><i class="fas fa-users"></i> System Users</div>
+                    <div class="table-wrapper">
+                        <table id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Sl. No</th>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="8">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination-container">
+                        <div class="pagination-info">
+                            Showing <span id="userPageStart">0</span> to <span id="userPageEnd">0</span> of <span id="userTotalCount">0</span> users
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="btn btn-sm btn-outline" id="userPrevPageBtn" disabled>
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <span id="userPageInfo" class="page-info">Page 1 of 1</span>
+                            <button class="btn btn-sm btn-outline" id="userNextPageBtn" disabled>
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <i class="fas fa-chart-line"></i> Age calculation uses precise date difference (handles leap years). 
+            Click on any KPI with <i class="fas fa-info-circle"></i> icon for detailed breakdown.
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="detailModal" class="detail-modal hide">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle"></h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-content" id="modalContent"></div>
+            <div class="modal-footer" id="modalFooter"></div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="login-modal hide">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header" style="background: #1e5631;">
+                <h3><i class="fas fa-user-plus"></i> Add New User</h3>
+                <button class="modal-close" id="closeAddUserModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Username *</label>
+                        <input type="text" id="newUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-key"></i> Password *</label>
+                        <input type="password" id="newPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user-circle"></i> Full Name</label>
+                        <input type="text" id="newFullName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="newEmail" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Role *</label>
+                        <select id="newRole" class="form-control">
+                            <option value="supervisor">Supervisor</option>
+                            <option value="operator">Operator</option>
+                            <option value="viewer">Viewer</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeAddUserModalBtn">Cancel</button>
+                <button class="btn btn-primary" id="submitAddUser">Add User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="login-modal hide">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header" style="background: #e67e22;">
+                <h3><i class="fas fa-edit"></i> Edit User</h3>
+                <button class="modal-close" id="closeEditUserModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="editUsername" class="form-control" readonly disabled>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-user-circle"></i> Full Name</label>
+                    <input type="text" id="editFullName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="editEmail" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Role</label>
+                    <select id="editRole" class="form-control">
+                        <option value="admin">Admin</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="operator">Operator</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-toggle-on"></i> Status</label>
+                    <select id="editStatus" class="form-control">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeEditUserModalBtn">Cancel</button>
+                <button class="btn btn-primary" id="submitEditUser">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="resetPasswordModal" class="login-modal hide">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header" style="background: #e67e22;">
+                <h3><i class="fas fa-key"></i> Reset Password</h3>
+                <button class="modal-close" id="closeResetPasswordModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <input type="hidden" id="resetUserId">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="resetUsername" class="form-control" readonly disabled>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> Password Type</label>
+                    <div style="display: flex; gap: 20px;">
+                        <label><input type="radio" name="passwordType" value="auto" checked> Auto Generate</label>
+                        <label><input type="radio" name="passwordType" value="manual"> Manual Set</label>
+                    </div>
+                </div>
+                <div id="manualPasswordDiv" style="display: none;">
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> New Password</label>
+                        <input type="password" id="manualPassword" class="form-control">
+                        <button type="button" class="btn btn-sm btn-outline" id="generatePasswordBtn" style="margin-top: 5px;">Generate Random</button>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeResetPasswordModalBtn">Cancel</button>
+                <button class="btn btn-primary" id="submitResetPassword">Reset Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="login-modal hide">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header" style="background: #e67e22;">
+                <h3><i class="fas fa-key"></i> Change Password</h3>
+                <button class="modal-close" id="closeChangePasswordModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Current Password</label>
+                    <input type="password" id="oldPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> New Password</label>
+                    <input type="password" id="newUserPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-check-circle"></i> Confirm New Password</label>
+                    <input type="password" id="confirmUserPassword" class="form-control" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeChangePasswordModalBtn">Cancel</button>
+                <button class="btn btn-primary" id="submitChangePassword">Change Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Log Modal -->
+    <div id="activityLogModal" class="login-modal hide">
+        <div class="modal-card" style="max-width: 800px;">
+            <div class="modal-header" style="background: #e67e22;">
+                <h3><i class="fas fa-history"></i> Activity Log</h3>
+                <button class="modal-close" id="closeActivityLogModal">&times;</button>
+            </div>
+            <div class="modal-content" style="max-height: 60vh;">
+                <div style="margin-bottom: 15px; text-align: right;">
+                    <button class="btn btn-sm btn-outline" id="clearActivityLogBtn">
+                        <i class="fas fa-trash-alt"></i> Clear Log
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityLogBody">
+                            <tr><td colspan="4">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeActivityLogModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="./js/config.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/charts.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/buslist.js"></script>
+    <script src="./js/transfer.js"></script>
+    <script src="./js/usermanager.js"></script>
+    
+    <script>
+    // Role-based UI visibility control
+    function updateUIByRole() {
+        const user = JSON.parse(localStorage.getItem("rtcCurrentUser") || "{}");
+        const isAdmin = user.role === "admin";
+        const isSupervisor = user.role === "supervisor";
+        
+        const transferTabBtn = document.getElementById("transferTabBtn");
+        const userManagerTabBtn = document.getElementById("userManagerTabBtn");
+        
+        if (userManagerTabBtn) {
+            userManagerTabBtn.style.display = isAdmin ? "inline-block" : "none";
+        }
+        
+        if (transferTabBtn) {
+            transferTabBtn.style.display = (isAdmin || isSupervisor) ? "inline-block" : "none";
+        }
+        
+        const editBusSection = document.getElementById("editBusSection");
+        if (editBusSection) {
+            editBusSection.style.display = (isAdmin || isSupervisor) ? "block" : "none";
+        }
+        
+        const addBusSection = document.getElementById("addBusSection");
+        if (addBusSection) {
+            addBusSection.style.display = (isAdmin || isSupervisor) ? "block" : "none";
+        }
+        
+        const exportBtn = document.getElementById("exportBtn");
+        if (exportBtn) {
+            exportBtn.style.display = (isAdmin || isSupervisor) ? "inline-block" : "none";
+        }
+        
+        const exportFilteredBtn = document.getElementById("exportFilteredBtn");
+        if (exportFilteredBtn) {
+            exportFilteredBtn.style.display = (isAdmin || isSupervisor) ? "inline-block" : "none";
+        }
+        
+        const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+        if (clearHistoryBtn) {
+            clearHistoryBtn.style.display = isAdmin ? "inline-block" : "none";
+        }
+        
+        const adminZone = document.getElementById("adminZone");
+        if (adminZone) {
+            adminZone.style.display = isAdmin ? "block" : "none";
+        }
+        
+        console.log("UI updated for role:", user.role);
+    }
+    
+    // Call after auth loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(updateUIByRole, 500);
+        });
+    } else {
+        setTimeout(updateUIByRole, 500);
+    }
+    
+    window.addEventListener('authUpdate', updateUIByRole);
+    </script>
+</body>
+</html>

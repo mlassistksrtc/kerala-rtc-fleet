@@ -1,0 +1,41 @@
+/* Dashboard Specific Styles */
+
+/* Chart Container */
+.chart-card canvas {
+    transition: opacity 0.3s;
+}
+
+/* Table Row Highlight */
+.table-wrapper tr:hover {
+    background: #fef9f0;
+}
+
+/* Modal Scroll */
+.modal-content {
+    scrollbar-width: thin;
+}
+
+/* Print Styles */
+@media print {
+    .admin-panel,
+    .user-area .btn,
+    #loginBtn,
+    #logoutBtn,
+    .info-icon,
+    .clickable-age,
+    .kpi-card.clickable {
+        display: none;
+    }
+    
+    .chart-card,
+    .table-card,
+    .kpi-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .age-card {
+        break-inside: avoid;
+    }
+}

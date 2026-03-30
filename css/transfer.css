@@ -1,0 +1,463 @@
+/* ==================== TRANSFER PAGE STYLES ==================== */
+
+.transfer-container {
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.transfer-section,
+.add-bus-section,
+.transfer-history-section {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-header h2 {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.section-header h2 i {
+    color: #e67e22;
+    margin-right: 10px;
+}
+
+.section-note {
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.section-note i {
+    margin-right: 4px;
+}
+
+/* Bus Search */
+.search-bus-section {
+    margin-bottom: 20px;
+}
+
+.search-bus-section label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.bus-search-wrapper {
+    position: relative;
+}
+
+#busSearchInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+#busSearchInput:focus {
+    outline: none;
+    border-color: #e67e22;
+    box-shadow: 0 0 0 2px rgba(230,126,34,0.1);
+}
+
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+}
+
+.search-results-dropdown.show {
+    display: block;
+}
+
+.search-result-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.search-result-item:hover {
+    background: #fef9f0;
+}
+
+.search-result-item .bus-no {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.search-result-item .reg-no {
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin-left: 8px;
+}
+
+/* Bus Details Card */
+.bus-details-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.bus-details-card h3 {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    color: #1e5631;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.detail-value {
+    font-size: 0.85rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.detail-value.highlight {
+    color: #e67e22;
+    font-weight: 700;
+}
+
+/* Transfer Options */
+.transfer-options {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.transfer-options h3 {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    color: #1e5631;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+}
+
+.transfer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.transfer-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.transfer-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.transfer-field select {
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+}
+
+.transfer-field select:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+.transfer-actions {
+    text-align: center;
+}
+
+/* Add Bus Form */
+.add-bus-form {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.form-group label i {
+    width: 18px;
+    color: #e67e22;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #e67e22;
+    box-shadow: 0 0 0 2px rgba(230,126,34,0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+}
+
+.form-message {
+    margin-top: 16px;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.form-message.success {
+    display: block;
+    background: #e8f5e9;
+    color: #1e5631;
+    border: 1px solid #c8e6c9;
+}
+
+.form-message.error {
+    display: block;
+    background: #ffebee;
+    color: #b91c1c;
+    border: 1px solid #ffcdd2;
+}
+
+/* Transfer History Table */
+.transfer-history-section .table-wrapper {
+    overflow-x: auto;
+}
+
+#transferHistoryTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+#transferHistoryTable th,
+#transferHistoryTable td {
+    padding: 10px 8px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#transferHistoryTable th {
+    background: #f8fafc;
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+#transferHistoryTable tr:hover {
+    background: #fef9f0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .transfer-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions button {
+        width: 100%;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .transfer-container {
+        padding: 12px;
+    }
+    
+    .transfer-section,
+    .add-bus-section,
+    .transfer-history-section {
+        padding: 12px;
+    }
+}
+/* Edit Bus Section */
+.edit-bus-section {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.edit-bus-form-container {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.edit-bus-form h3 {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    color: #e67e22;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+}
+
+.edit-bus-form h3 i {
+    margin-right: 8px;
+}
+
+/* Form Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.form-group label i {
+    width: 18px;
+    color: #e67e22;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #e67e22;
+    box-shadow: 0 0 0 2px rgba(230,126,34,0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.form-message {
+    margin-top: 16px;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.form-message.success {
+    display: block;
+    background: #e8f5e9;
+    color: #1e5631;
+    border: 1px solid #c8e6c9;
+}
+
+.form-message.error {
+    display: block;
+    background: #ffebee;
+    color: #b91c1c;
+    border: 1px solid #ffcdd2;
+}

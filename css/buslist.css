@@ -1,0 +1,596 @@
+/* ==================== BUS LIST PAGE STYLES ==================== */
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    background: white;
+    padding: 8px;
+    border-radius: 60px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    border: none;
+    background: transparent;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6b7280;
+}
+
+.tab-btn i {
+    margin-right: 8px;
+}
+
+.tab-btn:hover {
+    background: #eef2f5;
+    color: #1e5631;
+}
+
+.tab-btn.active {
+    background: #1e5631;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Bus List Container */
+.buslist-container {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow-x: auto;
+}
+
+/* Filter Panel - COMPACT VERSION */
+.filter-panel {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+}
+
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-header h3 {
+    font-size: 1rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.filter-header h3 i {
+    color: #e67e22;
+    margin-right: 6px;
+}
+
+.filter-header .btn-outline {
+    padding: 5px 12px;
+    font-size: 0.75rem;
+}
+
+/* Search Section */
+.search-section {
+    margin-bottom: 12px;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+#universalSearch {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+#universalSearch:focus {
+    outline: none;
+    border-color: #e67e22;
+    box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.1);
+}
+
+/* Filters Grid - COMPACT */
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: white;
+    border-radius: 10px;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.filter-group label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.filter-group label i {
+    color: #e67e22;
+    width: 14px;
+    font-size: 0.7rem;
+}
+
+/* Multi-select Dropdown - COMPACT */
+.multi-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.multi-select-btn {
+    width: 100%;
+    padding: 6px 8px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.multi-select-btn:hover {
+    border-color: #e67e22;
+    background: #fef9f0;
+}
+
+.multi-select-btn .btn-text {
+    color: #1e293b;
+    font-size: 0.8rem;
+}
+
+.multi-select-btn .selected-count {
+    background: #e67e22;
+    color: white;
+    padding: 0px 6px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+.multi-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    margin-top: 2px;
+}
+
+.multi-select-dropdown.show {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 6px 8px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.7rem;
+}
+
+.dropdown-header button {
+    background: none;
+    border: none;
+    color: #e67e22;
+    cursor: pointer;
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+.dropdown-header button:hover {
+    text-decoration: underline;
+}
+
+.dropdown-option {
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown-option:hover {
+    background: #fef9f0;
+}
+
+.dropdown-option input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #e67e22;
+}
+
+.dropdown-option label {
+    flex: 1;
+    cursor: pointer;
+    font-weight: normal;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+/* Selected Tags - COMPACT */
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+    min-height: 24px;
+}
+
+.tag {
+    background: #eef2ff;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #1e293b;
+}
+
+.tag i {
+    font-size: 0.55rem;
+    cursor: pointer;
+    color: #94a3b8;
+}
+
+.tag i:hover {
+    color: #e67e22;
+}
+
+/* Age Range Inputs - COMPACT */
+.age-range-group .age-inputs {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    width: 100%;
+}
+
+.age-range-group .age-input {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.age-range-group .age-input:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+.age-range-group .age-inputs span {
+    color: #6b7280;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+}
+
+/* Filter Stats - COMPACT */
+.filter-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-stats span {
+    font-weight: 700;
+    color: #1e5631;
+    font-size: 0.9rem;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+}
+
+/* Sortable Headers */
+#fullBusTableHead th {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+    padding: 8px 6px;
+    font-size: 0.75rem;
+}
+
+#fullBusTableHead th:hover {
+    background: #eef2ff;
+}
+
+.sort-icon {
+    margin-left: 4px;
+    font-size: 0.65rem;
+    opacity: 0.5;
+}
+
+th.sort-asc .sort-icon,
+th.sort-desc .sort-icon {
+    opacity: 1;
+}
+
+/* Bus List Table */
+.buslist-table {
+    margin-top: 0;
+    overflow-x: auto;
+}
+
+.buslist-table .table-wrapper {
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* Table Cell Responsive */
+#fullBusTable {
+    min-width: 1300px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#fullBusTable th,
+#fullBusTable td {
+    padding: 8px 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+/* Pagination - COMPACT */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pagination-info {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.page-info {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #1e293b;
+    min-width: 80px;
+    text-align: center;
+}
+
+.btn-sm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Collapsible Filter (Mobile) */
+.filter-toggle {
+    display: none;
+    width: 100%;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: 12px;
+    color: #1e293b;
+}
+
+.filter-toggle i {
+    margin-right: 6px;
+    color: #e67e22;
+}
+
+.filter-toggle .toggle-icon {
+    float: right;
+    transition: transform 0.3s;
+}
+
+.filter-toggle.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .filters-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .tab-btn {
+        padding: 8px 18px;
+        font-size: 0.8rem;
+    }
+    
+    .filter-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    /* Collapsible Filter on Mobile */
+    .filter-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .filter-content {
+        display: none;
+    }
+    
+    .filter-content.show {
+        display: block;
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .filter-group {
+        padding: 6px 8px;
+    }
+    
+    .age-inputs {
+        flex-direction: row;
+    }
+    
+    .pagination-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-stats {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .buslist-table .table-wrapper {
+        max-height: 45vh;
+    }
+    
+    #fullBusTable {
+        min-width: 900px;
+    }
+    
+    #fullBusTable th,
+    #fullBusTable td {
+        font-size: 0.7rem;
+        padding: 5px 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .buslist-container {
+        padding: 12px;
+    }
+    
+    .filter-panel {
+        padding: 10px;
+    }
+    
+    .filter-group {
+        padding: 5px 6px;
+    }
+    
+    .age-inputs {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .age-inputs span {
+        display: none;
+    }
+    
+    .age-input {
+        width: 100%;
+    }
+    
+    .pagination-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #fullBusTable {
+        min-width: 800px;
+    }
+    
+    #fullBusTable th,
+    #fullBusTable td {
+        font-size: 0.65rem;
+        padding: 4px 3px;
+    }
+}

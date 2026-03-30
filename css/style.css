@@ -1,0 +1,1112 @@
+/* ==================== RESET & BASE STYLES ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background: url('background.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+}
+
+.app-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    background: white;
+    padding: 16px 28px;
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title h1 {
+    font-size: 1.6rem;
+    color: #1a3e2f;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title h1 i {
+    color: #e67e22;
+    font-size: 1.8rem;
+}
+
+.title p {
+    color: #2c6e49;
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+/* ==================== USER AREA ==================== */
+.user-area {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.login-status {
+    background: #eef2f5;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+    border: none;
+    padding: 8px 20px;
+    border-radius: 32px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #eef2f5;
+    font-size: 0.85rem;
+}
+
+.btn-primary {
+    background: #1e5631;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0f3b22;
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: white;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-outline:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+}
+
+/* ==================== ADMIN PANEL ==================== */
+.admin-panel {
+    background: white;
+    border-radius: 24px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.flex-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 16px 0;
+}
+
+input[type="file"] {
+    border: 1px solid #cbd5e1;
+    border-radius: 32px;
+    padding: 8px 16px;
+    background: white;
+    cursor: pointer;
+}
+
+.upload-message {
+    margin-top: 12px;
+    font-size: 0.85rem;
+}
+
+.upload-message .success {
+    color: #1e5631;
+}
+
+.upload-message .error {
+    color: #b91c1c;
+}
+
+/* ==================== SECTION STYLES ==================== */
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1f2e3a;
+    border-left: 4px solid #e67e22;
+    padding-left: 12px;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-subtitle i {
+    color: #e67e22;
+}
+
+/* ==================== KPI GRID ==================== */
+.kpi-section {
+    margin-bottom: 32px;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+    border-left: 4px solid;
+}
+
+.kpi-card[data-kpi="totalFleet"] { border-left-color: #2c6e49; }
+.kpi-card[data-kpi="makeType"] { border-left-color: #3498db; }
+.kpi-card[data-kpi="busClass"] { border-left-color: #9b59b6; }
+.kpi-card[data-kpi="swiftBuses"] { border-left-color: #1abc9c; }
+.kpi-card[data-kpi="electricBuses"] { border-left-color: #f1c40f; }
+.kpi-card[data-kpi="depots"] { border-left-color: #e67e22; }
+.kpi-card[data-kpi="workshops"] { border-left-color: #e74c3c; }
+
+.kpi-card.clickable {
+    cursor: pointer;
+}
+
+.kpi-card.clickable:hover {
+    background: #fef9f0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.kpi-card h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.kpi-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.kpi-sub {
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin-top: 6px;
+}
+
+.info-icon {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.kpi-card.clickable:hover .info-icon {
+    color: #e67e22;
+}
+
+/* ==================== AGE GRID ==================== */
+.age-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.age-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.age-card:hover {
+    background: #eef2ff;
+    transform: scale(1.02);
+}
+
+.age-range {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1e5631;
+    margin-bottom: 6px;
+}
+
+.age-count {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.age-percentage {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.age-card.highlight {
+    background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%);
+}
+
+.age-card.highlight .age-range,
+.age-card.highlight .age-count,
+.age-card.highlight .age-percentage {
+    color: white;
+}
+
+.clickable-age {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.clickable-age:hover {
+    color: #e67e22;
+}
+
+.clickable-age:hover .info-icon {
+    color: #e67e22;
+}
+
+.loading-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+}
+
+/* ==================== CHARTS SECTION ==================== */
+.charts-section {
+    margin-bottom: 28px;
+}
+
+.chart-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.chart-card {
+    flex: 1;
+    min-width: 320px;
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.chart-card canvas {
+    max-height: 350px;
+    width: 100%;
+}
+
+/* ==================== TABLE CARD ==================== */
+.table-card {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: #f8fafc;
+    color: #2c3e50;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+/* ==================== MODAL ==================== */
+.detail-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.detail-modal .modal-card {
+    background: white;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    border-radius: 20px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #1e5631;
+    color: white;
+    border-bottom: 1px solid #2c6e49;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.modal-header h3 i {
+    margin-right: 8px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    opacity: 0.8;
+}
+
+.modal-content {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 12px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Modal List Styles */
+.detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.detail-list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-list-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item-name {
+    color: #4b5563;
+}
+
+.detail-item-count {
+    font-weight: 600;
+    color: #1e5631;
+}
+
+.detail-list-item.highlight {
+    background: #fef9f0;
+    padding: 10px 8px;
+    border-radius: 8px;
+}
+
+/* ==================== LOGIN MODAL - REDUCED SIZE ==================== */
+.login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 38px;
+    z-index: 1000;
+}
+
+.login-modal .modal-card {
+    background: white;
+    width: 400px;
+    max-width: 90%;
+    height: 440px;
+    max-height: 85vh;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+}
+
+.login-modal .modal-header {
+    background: #1e5631;
+    padding: 18px 24px;
+    flex-shrink: 0;
+}
+
+.login-modal .modal-header h3 {
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-modal .modal-header h3 i {
+    font-size: 1.3rem;
+}
+
+.login-modal .modal-content {
+    padding: 20px 24px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: none;
+}
+
+.login-modal .modal-footer {
+    padding: 14px 24px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    margin: 6px 0;
+    border-radius: 28px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #e67e22;
+    box-shadow: 0 0 0 2px rgba(230,126,34,0.1);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.hide {
+    display: none;
+}
+
+.warning {
+    color: #b91c1c;
+    font-size: 0.7rem;
+    margin-top: 8px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ==================== FOOTER ==================== */
+.footer-note {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin-top: 32px;
+    padding: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* ==================== SCROLLBAR ==================== */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 1024px) {
+    .app-container {
+        padding: 16px;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+    }
+    
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        padding: 12px;
+    }
+    
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 16px 20px;
+    }
+    
+    .title h1 {
+        font-size: 1.3rem;
+        justify-content: center;
+    }
+    
+    .title h1 i {
+        font-size: 1.5rem;
+    }
+    
+    .title p {
+        font-size: 0.75rem;
+    }
+    
+    .user-area {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .login-status {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+    
+    .btn {
+        padding: 6px 16px;
+        font-size: 0.75rem;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+    
+    .kpi-card {
+        padding: 12px;
+    }
+    
+    .kpi-value {
+        font-size: 1.3rem;
+    }
+    
+    .kpi-card h3 {
+        font-size: 0.65rem;
+    }
+    
+    .age-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 8px;
+        padding: 16px;
+    }
+    
+    .age-range {
+        font-size: 0.7rem;
+    }
+    
+    .age-count {
+        font-size: 1.1rem;
+    }
+    
+    .chart-card {
+        min-width: 100%;
+        padding: 16px;
+    }
+    
+    .chart-card canvas {
+        max-height: 250px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+    
+    .section-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+    }
+    
+    th, td {
+        font-size: 0.7rem;
+        padding: 8px 6px;
+    }
+    
+    .admin-panel {
+        padding: 16px 20px;
+    }
+    
+    .flex-group {
+        gap: 12px;
+    }
+    
+    input[type="file"] {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    
+    /* Login Modal Mobile Adjustments - Reduced Size */
+    .login-modal {
+        padding-top: 20px;
+        align-items: flex-start;
+    }
+    
+    .login-modal .modal-card {
+        width: 92%;
+        height: auto;
+        min-height: 420px;
+        max-height: 80vh;
+        margin-top: 10px;
+    }
+    
+    .login-modal .modal-header {
+        padding: 14px 20px;
+    }
+    
+    .login-modal .modal-header h3 {
+        font-size: 1.15rem;
+    }
+    
+    .login-modal .modal-content {
+        padding: 18px 20px;
+    }
+    
+    .login-modal .modal-footer {
+        padding: 12px 20px;
+    }
+    
+    .form-control {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        margin: 5px 0;
+    }
+    
+    .modal-actions .btn {
+        padding: 6px 14px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container {
+        padding: 8px;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .kpi-card {
+        padding: 10px;
+    }
+    
+    .kpi-value {
+        font-size: 1.2rem;
+    }
+    
+    .age-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .section-title {
+        font-size: 0.9rem;
+    }
+    
+    .section-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .btn {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+    
+    .login-status {
+        font-size: 0.65rem;
+        padding: 4px 10px;
+    }
+    
+    /* Ultra Small Screen Login Modal - Further Reduced */
+    .login-modal .modal-card {
+        width: 95%;
+        min-height: 400px;
+        max-height: 75vh;
+    }
+    
+    .login-modal .modal-header {
+        padding: 12px 16px;
+    }
+    
+    .login-modal .modal-header h3 {
+        font-size: 1rem;
+    }
+    
+    .login-modal .modal-header h3 i {
+        font-size: 1.1rem;
+    }
+    
+    .login-modal .modal-content {
+        padding: 14px 16px;
+    }
+    
+    .login-modal .modal-footer {
+        padding: 10px 16px;
+    }
+    
+    .form-control {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        margin: 4px 0;
+    }
+    
+    .modal-actions {
+        margin-top: 12px;
+        gap: 10px;
+    }
+    
+    .modal-actions .btn {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+    
+    .warning {
+        font-size: 0.65rem;
+        margin-top: 6px;
+    }
+}
+
+/* Landscape Mode Optimization */
+@media (max-height: 600px) and (orientation: landscape) {
+    .login-modal {
+        padding-top: 10px;
+    }
+    
+    .login-modal .modal-card {
+        height: auto;
+        min-height: 380px;
+        max-height: 85vh;
+    }
+    
+    .login-modal .modal-header {
+        padding: 10px 20px;
+    }
+    
+    .login-modal .modal-content {
+        padding: 12px 20px;
+    }
+    
+    .login-modal .modal-footer {
+        padding: 8px 20px;
+    }
+    
+    .form-control {
+        padding: 6px 12px;
+        margin: 4px 0;
+    }
+}
+
+/* User Management Styles */
+.user-management-container {
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow-x: auto;
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.user-header h2 {
+    font-size: 1.3rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.user-header h2 i {
+    color: #e67e22;
+    margin-right: 10px;
+}
+
+.user-header-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.user-search-section {
+    margin-bottom: 24px;
+}
+
+.user-search-section .search-wrapper {
+    position: relative;
+}
+
+.user-search-section .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+#userSearchInput {
+    width: 100%;
+    padding: 12px 16px 12px 48px;
+    border: 1px solid #e2e8f0;
+    border-radius: 48px;
+    font-size: 0.9rem;
+}
+
+/* Badge Styles */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.badge-admin { background: #dc2626; color: white; }
+.badge-supervisor { background: #e67e22; color: white; }
+.badge-operator { background: #3498db; color: white; }
+.badge-viewer { background: #6b7280; color: white; }
+.badge-active { background: #10b981; color: white; }
+.badge-inactive { background: #9ca3af; color: white; }
+
+.user-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+.btn-icon.btn-edit { color: #3498db; }
+.btn-icon.btn-edit:hover { background: #eef2ff; color: #2980b9; }
+.btn-icon.btn-reset { color: #e67e22; }
+.btn-icon.btn-reset:hover { background: #fef9f0; color: #d35400; }
+.btn-icon.btn-delete { color: #dc2626; }
+.btn-icon.btn-delete:hover { background: #fee2e2; color: #b91c1c; }
+.btn-icon.btn-reactivate { color: #10b981; }
+.btn-icon.btn-reactivate:hover { background: #d1fae5; color: #059669; }
+
+/* User Management Table Responsive */
+@media (max-width: 768px) {
+    .user-management-container {
+        padding: 16px;
+    }
+    
+    .user-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .user-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .badge {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+    }
+    
+    .btn-icon {
+        padding: 4px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Modal Styles */
+.modal-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    color: white;
+}
+
+.modal-header .modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-content {
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 16px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+.form-message {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    display: none;
+}
+
+.form-message.success {
+    display: block;
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.form-message.error {
+    display: block;
+    background: #fee2e2;
+    color: #b91c1c;
+}
